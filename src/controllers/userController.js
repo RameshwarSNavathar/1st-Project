@@ -83,7 +83,7 @@ const userLogin = async function (req, res) {
     let token = jwt.sign(
       {userId: getUsersData._id.toString()},
       "Book-mgmt",
-      { expiresIn: '30d' }
+      { expiresIn: 30*60 }
     );
 
     res.setHeader("x-api-key", token);

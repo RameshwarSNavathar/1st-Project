@@ -4,7 +4,6 @@ const bookController=require("../controllers/bookController")
 const userController = require("../controllers/userController");
 const reviewController = require("../controllers/reviewController");
 const {authenticate,authorisation} = require("../middlewares/auth");
-const {valideBookDetails} = require("../middlewares/validation")
 
 /***********************************user register *****************************/
 router.post("/register", userController.createUser);
@@ -13,7 +12,7 @@ router.post("/register", userController.createUser);
 router.post("/login",userController.userLogin)
 
 /***************************************create Book**************************/
-router.post("/books",authenticate,valideBookDetails,bookController.createBook)
+router.post("/books",authenticate,bookController.createBook)
 
 /*****************************getbooks***************************************/
 router.get("/books",authenticate,bookController.getbooks)

@@ -306,23 +306,3 @@ data: {
 }
 
 
-
-<!-- if (reviewData) { var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: 1 } }, { new: true }).select({ __v: 0 }).lean() }
-
-        updateData.reviewsData = reviewData -->
-
-<!-- if (reviewData) {
-   var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: 1 } }, { new: true }).select({ __v: 0 }).lean() 
-   }
-
-        updateData.reviewsData = reviewData
-new Date()
-
-        let reviewData = await reviewModel.create(requestBody)
-        if (reviewData) { var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: 1 } }, { new: true }).select({ __v: 0 }).lean() }
-
-        updateData.reviewsData = reviewData
-
-        return res.status(201).send({ status: true, message: 'Success', data: updateData })
-    }
- -->

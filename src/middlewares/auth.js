@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bookModel = require("../models/bookModel");
-let decodedtoken;
+
 const { isValidObjectId } = require("../validator/validator");
 
 exports.authenticate = function (req, res, next) {
@@ -19,14 +19,14 @@ exports.authenticate = function (req, res, next) {
         if (err) {
           return res
             .status(401)
-            .send({ status: false, message: "token invalid" });
+            .send({ status: false, message: err.message });
         }
         if (Date.now() > decodedToken.exp * 1000) {
           return res
             .status(400)
             .send({ status: false, message: "token expired" });
         }
-        req.decodedToken = decodedToken;
+       
         req.tokenId = decodedToken.userId;
         next();
       }

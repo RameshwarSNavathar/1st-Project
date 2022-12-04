@@ -116,6 +116,14 @@ const updateBook = async function (req, res) {
       let findTitle =await bookModel.findOne({title:title})
       if(findTitle) return res.status(400).send({ status: false, message: "this title is already exists" })
     }
+    if(excerpt){
+      if(!isValidString(excerpt)) return res.status(400).send({status:false,message:"please provide the valid excerpt"})
+    }
+
+    if(releasedAt){
+      if (!isValidDate(releasedAt)) return res.status(400).send({ status: false, message: "please provide the valid releasedAt" })
+    }
+    
     if (ISBN){
       if (!isValidISBN(ISBN)) return res.status(400).send({ status: false, message: "please provide the valid ISBN"})
       let findBook = await bookModel.findOne({ISBN:ISBN})

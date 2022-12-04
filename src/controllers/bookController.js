@@ -24,7 +24,7 @@ const createBook = async function (req, res) {
       if (!userId) return res.status(400).send({ status: false, message: "userId is mandatory in request body" })
       if(!isValidObjectId(userId)) return res.status(400).send({status:false,message:"please provide the valid userId"})
       let user=await userModel.findById(userId)
-      if(!user) return res.status(400).send({ status: false, message: "please provide the valid userId" })
+      if(!user) return res.status(404).send({ status: false, message: "user not found with this user id" })
       
       //----------->>-ISBN..
       if (!ISBN) return res.status(400).send({ status: false, message: "ISBN is mandatory in request body" })

@@ -75,7 +75,7 @@ const updateReview = async function(req,res){
         }
         let reviewBook = await reviewModel.findOneAndUpdate({ _id:reviewId ,bookId : bookId },data, { new: true })
         if (reviewBook) { 
-            var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { new: true }).select({ __v: 0 }).lean()
+            var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },{ new: true }).select({ __v: 0 }).lean()
             let finalData = await reviewModel.find(reviewBook).select({ isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 });
             updateData.reviewsData = finalData
             return res.status(200).send({status:true,message:"successfully update",data:updateData});

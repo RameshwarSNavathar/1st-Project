@@ -49,8 +49,9 @@ exports.authorisation = async function (req, res, next) {
   let book = await bookModel.findById(bookId);
   if (!book)
     return res
-      .status(400)
-      .send({ status: false, message: "this book is not exists" });
+      .status(404)
+      .send({ status: false, message: "book not found" });
+      
   if (book.userId != req.tokenId)
     return res
       .status(400)

@@ -32,8 +32,9 @@ const createReview = async function(req,res){
         const reviewBook = await reviewModel.create(data)
         if (reviewBook) { 
             var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },
-                 { $inc: { reviews: 1 }}, { new: true }).select({ __v: 0 }).lean()}
-                let finalData = await reviewModel.find(reviewBook).select({ isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 });
+                 { $inc: { reviews: 1 }}, { new: true }).select({ __v: 0 }).lean()
+            }
+            let finalData = await reviewModel.find(reviewBook).select({ isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 });
         updateData.reviewsData = finalData
         return res.status(201).send({status:true,message:"review created successfully",data:updateData})}
     catch(err){
@@ -72,10 +73,9 @@ const updateReview = async function(req,res){
         if(rating){
             if(!isValidRating(rating)) return res.status(400).send({status :false , message : "please provide rating in between 1 to 5"})
         }
-        let reviewBook = await reviewModel.findOneAndUpdate({ _id:reviewId },data, { new: true })
+        let reviewBook = await reviewModel.findOneAndUpdate({ _id:reviewId ,bookId : bookId },data, { new: true })
         if (reviewBook) { 
-            var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },
-                 { $inc: { reviews: 1 }}, { new: true }).select({ __v: 0 }).lean()
+            var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { new: true }).select({ __v: 0 }).lean()
             let finalData = await reviewModel.find(reviewBook).select({ isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 });
             updateData.reviewsData = finalData
             return res.status(200).send({status:true,message:"successfully update",data:updateData});
@@ -102,12 +102,12 @@ const deleteReview =async function(req,res){
     let review=await reviewModel.findOne({_id:reviewId,isDeleted:false})
     if(!review) return res.status(404).send({status:false,message:"this review is not exists"})
 
-    const reviewBook = await reviewModel.findOneAndUpdate({_id:reviewId}, {$set:{isDeleted:true,deletedAt:new Date(Date.now())}}, {new:true})
+    const reviewBook = await reviewModel.findOneAndUpdate({_id:reviewId, bookId: bookId}, {$set:{isDeleted:true,deletedAt:new Date(Date.now())}}, {new:true})
     if(!reviewBook) return res.status(400).send({status: false,  message: "review not exists with this reviewId"})
     
     if (reviewBook) { 
         var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },
-             { $inc: { reviews: 1 }}, { new: true }).select({ __v: 0 }).lean()
+             { $inc: { reviews: -1 }}, { new: true }).select({ __v: 0 }).lean()
         let finalData = await reviewModel.find(reviewBook).select({ isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 });
         updateData.reviewsData = finalData
         return res.status(200).send({status:true,message:"successfully deleted",data:updateData});

@@ -36,7 +36,7 @@ const createUser = async function (req, res) {
 
     //-------------------------->>-password-<<---------------------<<
     if (!password) return res.status(400).send({ status: false, message: "password is required" });
-    if (!isValidPass(password)) return res.status(400).send({status: false,message: "please provide the valid or strong password"});
+    if (!isValidPass(password)) return res.status(400).send({status: false,message: "please provide the valid or strong password length betweeen 8 to 15"});
 
     //------------------------->>-address-<<-----------------------<<
     if(address){

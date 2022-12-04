@@ -115,7 +115,7 @@ const updateBook = async function (req, res) {
     let reqData = Object.keys(data)  
     let enums = ["title", "excerpt", "releasedAt", "ISBN"]
     for (let i = 0; i< reqData.length; i++) {
-      const element = reqData[index];
+      const element = reqData[i];
       if (!enums.includes(element)) {
         return res.status(400).send({ status: false, message: `book cannot update using ${element} field` })
       }

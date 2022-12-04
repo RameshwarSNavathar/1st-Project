@@ -5,7 +5,7 @@ const { isValidObjectId } = require("../validator/validator");
 
 exports.authenticate = function (req, res, next) {
   try {
-    let token = req.headers["x-api-key"] || req.headers["X-Api-Key"];
+    let token = req.headers["x-api-key"] 
     if (!token)
       return res
         .status(400)

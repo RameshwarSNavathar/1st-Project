@@ -68,7 +68,7 @@ const userLogin = async function (req, res) {
 
     //----->>-email..
     if (!email) return res.status(400).send({ status: false, message: "email is required" });
-    if (!isValidEmail) return res.status(400).send({ status: false, message: "plese provide the valid emailId" });
+    if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "please provide the valid emailId" });
     
     let emailId = await userModel.findOne({ email: email });
     if (!emailId) return res.status(404).send({status: false,message: "your account not found please create account first"});

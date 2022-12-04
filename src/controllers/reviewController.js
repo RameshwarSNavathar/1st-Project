@@ -10,7 +10,7 @@ const createReview = async function(req,res){
         if(Object.keys(data).length==0) return res.status(400).send({status:false,message:"please provide some data "})
 
         const bookId = req.params.bookId
-       
+        console.log(bookId)
         if(!bookId) return res.status(400).send({status:false,message:"please provide bookId"})
         if(!isValidObjectId(bookId)) return res.status(400).send({status:false,message:"please provide valid bookId"})
         
@@ -32,10 +32,8 @@ const createReview = async function(req,res){
             var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },
                  { $inc: { reviews: 1 }}, { new: true }).select({ __v: 0 }).lean()
                 }
-                let finalData = await reviewModel.find(reviewBook).select({ isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 });
-                  updateData.reviewsData = finalData
-       
-        return res.status(201).send({status:true,message:"review created successfully",data:updateData})
+        updateData.reviewsData = reviewBook
+        return res.status(201).send({status:true,message:"review created successfully",data:reviewBook})
         }
     catch(err){
         return res.status(500).send({status:false,message:err.message})

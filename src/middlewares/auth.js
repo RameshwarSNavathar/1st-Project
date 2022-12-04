@@ -51,9 +51,7 @@ exports.authorisation = async function (req, res, next) {
     return res
       .status(400)
       .send({ status: false, message: "this book is not exists" });
-  let userid = book.userId;
-  let userId = req.tokenId;
-  if (userid != userId)
+  if (book.userId != req.tokenId)
     return res
       .status(400)
       .send({ status: false, message: "unauthorised user!" });

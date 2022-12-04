@@ -98,6 +98,7 @@ const getBookById = async function(req,res){
 const updateBook = async function (req, res) {
   try {
     let data = req.body
+    const {title, excerpt, releasedAt, ISBN} = data
     let bookId = req.params.bookId
     if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "please provide Data in body" })
 
@@ -110,16 +111,16 @@ const updateBook = async function (req, res) {
       }
     }
     
-    if (!title) return res.status(400).send({ status: false, message: "title is mandatory in request body" })
-    if(!isValidString(title)) return res.status(400).send({status:false,message:"please provide the valid title"})
-    let findTitle =await bookModel.findOne({title:title})
-    if(findTitle) return res.status(400).send({ status: false, message: "this title is already exists" })
-
-    if (!ISBN) return res.status(400).send({ status: false, message: "ISBN is mandatory in request body" })
-    if (!isValidISBN(ISBN)) return res.status(400).send({ status: false, message: "please provide the valid ISBN"})
-    let findBook = await bookModel.findOne({ISBN:ISBN})
-    if (findBook)  return res.status(400).send({ status: false, message: "please provide the unique ISBN"})
-
+    if (title) {
+      if(!isValidString(title)) return res.status(400).send({status:false,message:"please provide the valid title"})
+      let findTitle =await bookModel.findOne({title:title})
+      if(findTitle) return res.status(400).send({ status: false, message: "this title is already exists" })
+    }
+    if (ISBN){
+      if (!isValidISBN(ISBN)) return res.status(400).send({ status: false, message: "please provide the valid ISBN"})
+      let findBook = await bookModel.findOne({ISBN:ISBN})
+      if (findBook)  return res.status(400).send({ status: false, message: "please provide the unique ISBN"})
+    }
     let updatebook = await bookModel.findByIdAndUpdate({ _id: bookId }, data, { new: true })
 
     return res.status(200).send({ status: true,message :"Book updated", data: updatebook })

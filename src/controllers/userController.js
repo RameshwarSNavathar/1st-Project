@@ -21,7 +21,7 @@ const createUser = async function (req, res) {
 
     //-------------------------->>-phone-<<----------------------<<
     if (!phone) return res.status(400).send({ status: false, message: "phone is required" });
-    if (!isvalidMobile(phone)) return res.status(400).send({status: false, message: "plese provide the valid phone number"});
+    if (!isvalidMobile(phone)) return res.status(400).send({status: false, message: "please provide the valid phone number"});
 
     let mobile = await userModel.findOne({ phone: phone });
     if (mobile) return res.status(400).send({status: false,message: "this phone number is already exists"});
@@ -29,7 +29,7 @@ const createUser = async function (req, res) {
     //-------------------------->>-email-<<----------------------<<
 
     if (!email) return res.status(400).send({ status: false, message: "email is required" });
-    if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "plese provide the valid emailId" });
+    if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "please provide the valid emailId" });
     
     let emailId = await userModel.findOne({ email: email });
     if (emailId) return res.status(400).send({ status: false, message: "this emailId is already exists" });
@@ -85,11 +85,9 @@ const userLogin = async function (req, res) {
       "Book-mgmt",
       { expiresIn: 30*60 }
     );
-
-    res.setHeader("x-api-key", token);
-
-    return res.status(200).send({status: true,message: "Success",data: { userId: getUsersData._id, token: token }});
     
+    res.setHeader("x-api-key", token);
+    return res.status(200).send({status: true,message: "Success",data: { userId: getUsersData._id, token: token }});
   } catch (err) {
     res.status(500).send({ status: false, message: err.message });
   }

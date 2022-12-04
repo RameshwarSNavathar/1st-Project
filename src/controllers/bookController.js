@@ -60,16 +60,12 @@ const getbooks = async function (req, res) {
       if (!Object.keys(queries).length) {
         const data = await bookModel.find({ isDeleted: false }).sort({ title: 1 });
         if (data.length == 0) return res.status(404).send({ status: false, message: "Book not found" });
-
         return res.status(200).send({ status: true, Data: data });
     } 
     else {
-      const data = await bookModel.find(result)
-        .select({title: 1, _id: 1, excerpt: 1,userId: 1, category: 1, releasedAt: 1,reviews: 1,})
-        .sort({ title: 1 });
-
+      const data = await bookModel.find(result).select({title: 1, _id: 1, excerpt: 1,userId: 1, category: 1, releasedAt: 1,reviews: 1,})
+      .sort({ title: 1 });
       if (data.length == 0) return res.status(404).send({ status: false, message: "Book not found" });
-
       return res.status(200).send({ status: true,message : "Book list", data: data });
     }
   } catch (err) {

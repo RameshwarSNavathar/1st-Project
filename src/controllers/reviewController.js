@@ -1,16 +1,16 @@
 const reviewModel = require('../models/reviewModel')
 const bookModel = require("../models/bookModel")
-const { isValidObjectId,isValidString, isValidDate,isValidRating } = require("../validator/validator");
+const { isValidObjectId,isValidString,isValidRating } = require("../validator/validator");
 
 /*************************************create review***************************************/
 const createReview = async function(req,res){
     try{
         const data = req.body
-        const {reviewedBy,reviewedAt,rating,review} = data
+        const {reviewedBy,rating,review} = data
         if(Object.keys(data).length==0) return res.status(400).send({status:false,message:"please provide some data "})
 
         const bookId = req.params.bookId
-        console.log(bookId)
+        
         if(!bookId) return res.status(400).send({status:false,message:"please provide bookId"})
         if(!isValidObjectId(bookId)) return res.status(400).send({status:false,message:"please provide valid bookId"})
         
@@ -18,24 +18,24 @@ const createReview = async function(req,res){
         if(!findBook) return res.status(404).send({ status: false, message: "book not found" })
         if(findBook.isDeleted==true) return res.status(400).send({status:false,message:"book is already deleted"})
 
-        if(!reviewedAt) return res.status(400).send({status:false,message:"please provide reviewedAt"})
-        if(!isValidDate(reviewedAt)) return res.status(400).send({status:false,message:"please provide valid reviewedAt"})
-        
         if(!rating) return res.status(400).send({status:false,message:"please provide rating"})
         if(!isValidRating(rating)) return res.status(400).send({status :false , message : "please provide rating in between 1 to 5"})
     
         if(reviewedBy){
-            if(!isValidString(reviewedBy)) return res.status(400).send({status:false,message:"please provide a valid  reviewedBy"})
+            if(!isValidString(reviewedBy)) return res.status(400).send({status:false,message:"please provide a valid reviewedBy"})
         }
-        const reviewBook = await reviewModel.create({bookId,reviewedBy,reviewedAt,rating,review})
+        if(review){
+            if(!isValidString(review)) return res.status(400).send({status:false,message:"please provide a valid review"})
+        }
+        data.bookId=bookId
+        data.reviewedAt=new Date(Date.now())
+        const reviewBook = await reviewModel.create(data)
         if (reviewBook) { 
             var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },
-                 { $inc: { reviews: 1 }}, { new: true }).select({ __v: 0 }).lean()
-                }
+                 { $inc: { reviews: 1 }}, { new: true }).select({ __v: 0 }).lean()}
                 let finalData = await reviewModel.find(reviewBook).select({ isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 });
         updateData.reviewsData = finalData
-        return res.status(201).send({status:true,message:"review created successfully",data:updateData})
-        }
+        return res.status(201).send({status:true,message:"review created successfully",data:updateData})}
     catch(err){
         return res.status(500).send({status:false,message:err.message})
     }

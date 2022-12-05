@@ -125,7 +125,7 @@ const updateBook = async function (req, res) {
       let findBook = await bookModel.findOne({ISBN:ISBN})
       if (findBook)  return res.status(400).send({ status: false, message: "please provide the unique ISBN"})
     }
-    let updatebook = await bookModel.findByIdAndUpdate({ _id: bookId }, data, { new: true })
+    let updatebook = await bookModel.findOneAndUpdate({ _id: bookId,isDeleted :false }, data, { new: true })
 
     return res.status(200).send({ status: true,message :"Book updated", data: updatebook })
   } catch (err) {
@@ -137,7 +137,7 @@ const updateBook = async function (req, res) {
 const deletebookbyId= async function(req, res){
   try{
     let bookId = req.params.bookId;
-    const bookbyId= await bookModel.findOneAndUpdate({_id:bookId}, {$set:{isDeleted:true,deletedAt:new Date(Date.now())}}, {new:true})
+    const bookbyId= await bookModel.findOneAndUpdate({_id:bookId,isDeleted:false}, {$set:{isDeleted:true,deletedAt:new Date(Date.now())}}, {new:true})
     if(!bookbyId) return res.status(404).send({status: false,  message: "book not exists with this bookId"})
     return res.status(200).send({status:true, message: "successfully deleted", data: bookbyId })
   }catch(error){

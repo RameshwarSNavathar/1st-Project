@@ -38,6 +38,7 @@ exports.authenticate = function (req, res, next) {
 
 exports.authorisation = async function (req, res, next) {
   let bookId = req.params.bookId;
+  
   if (!bookId)
     return res
       .status(400)

@@ -1,6 +1,6 @@
 const bookModel = require("../models/bookModel");
 const reviewModel = require("../models/reviewModel");
-const userModel = require("../models/userModel")
+const userModel = require("../models/userModel");
 const { isValidObjectId,isValidISBN,isValidString, isValidDate } = require("../validator/validator");
 
 //-------------------------->>-createBook-<<---------------------------<<
@@ -23,6 +23,9 @@ const createBook = async function (req, res) {
       //----------->>-userId..
       if (!userId) return res.status(400).send({ status: false, message: "userId is mandatory in request body" })
       if(!isValidObjectId(userId)) return res.status(400).send({status:false,message:"please provide the valid userId"})
+      /******************************check authorization ***********************************/
+      if (userId != req.tokenId) return res.status(400).send({ status: false, message: "unauthorised user!" });
+      
       let user=await userModel.findById(userId)
       if(!user) return res.status(404).send({ status: false, message: "user not found with this user id" })
       

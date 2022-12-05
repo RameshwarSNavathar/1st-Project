@@ -54,14 +54,14 @@ const updateReview = async function(req,res){
         if (!bookId) return res.status(400).send({ status: false, message: "please provide bookId" })
         if(!isValidObjectId(bookId)) return res.status(400).send({status : false , message : "please provide valid bookId"})
         
-        const findBook = await bookModel.findById(bookId)
+        const findBook = await bookModel.findOne({_id:bookId,isDeleted:false})
         if (!findBook) return res.status(404).send({ status: false, message: "book not found" })
         if (findBook.isDeleted == true) return res.status(400).send({ status: false, message: "book is already deleted" })
 
         if (!reviewId) return res.status(400).send({ status: false, message: "please provide reviewId" })
         if(!isValidObjectId(reviewId)) return res.status(400).send({status : false , message : "please provide valid reviewId"})
 
-        const findReview = await reviewModel.findById(reviewId)
+        const findReview = await reviewModel.findOne({_id:reviewId,isDeleted:false})
         if (!findReview) return res.status(404).send({ status: false, message: "review not found" })
         if (findReview.isDeleted == true) return res.status(400).send({ status: false, message: "review is already deleted" })
         
@@ -72,7 +72,7 @@ const updateReview = async function(req,res){
         if(rating){
             if(!isValidRating(rating)) return res.status(400).send({status :false , message : "please provide rating in between 1 to 5"})
         }
-        let reviewBook = await reviewModel.findOneAndUpdate({ _id:reviewId ,bookId : bookId },data, { new: true })
+        let reviewBook = await reviewModel.findOneAndUpdate({ _id:reviewId ,bookId : bookId ,isDeleted:false},data, { new: true })
         if (reviewBook) { 
             var updateData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },{ new: true }).select({ __v: 0 }).lean()
             let finalData = await reviewModel.find(reviewBook).select({ isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 });

@@ -10,11 +10,10 @@ const createReview = async function(req,res){
         if(Object.keys(data).length==0) return res.status(400).send({status:false,message:"please provide some data "})
 
         const bookId = req.params.bookId
-        
         if(!bookId) return res.status(400).send({status:false,message:"please provide bookId"})
         if(!isValidObjectId(bookId)) return res.status(400).send({status:false,message:"please provide valid bookId"})
         
-        let findBook=await bookModel.findOne({_id:bookId})
+        let findBook=await bookModel.findOne({_id:bookId,isDeleted :false})
         if(!findBook) return res.status(404).send({ status: false, message: "book not found" })
         if(findBook.isDeleted==true) return res.status(400).send({status:false,message:"book is already deleted"})
 

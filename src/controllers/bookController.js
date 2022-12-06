@@ -3,14 +3,6 @@ const reviewModel = require("../models/reviewModel");
 const userModel = require("../models/userModel");
 const aws= require("aws-sdk");
 const { isValidObjectId,isValidISBN,isValidString, isValidDate } = require("../validator/validator");
-
-/**
- * Access key ID
-AKIAY3L35MCRZNIRGT6N
-
-Secret access key
-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
- */
 //-------------------------->>-createBook-<<---------------------------<<
 aws.config.update({
   accessKeyId : "AKIAY3L35MCRZNIRGT6N",
@@ -81,7 +73,7 @@ const createBook = async function (req, res) {
       /******************************check authorization ***********************************/
       if (userId != req.tokenId) return res.status(403).send({ status: false, message: "unauthorised user!" });
       
-      let user=await userModel.findById(userId)
+      let user=await userModel.findOne({_id :userId , isDeleted : false})
       if(!user) return res.status(404).send({ status: false, message: "user not found with this user id" })
       
       //----------->>-ISBN..

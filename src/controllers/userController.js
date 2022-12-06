@@ -77,7 +77,7 @@ const userLogin = async function (req, res) {
     if (!password) return res.status(400).send({ status: false, message: "password is required" });
     if (!isValidPass(password)) return res.status(400).send({status: false,message: "please provide the valid or strong password"});
 
-    let getUsersData = await userModel.findOne({email: email,password: password ,isDeleted: FontFaceSetLoadEvent});
+    let getUsersData = await userModel.findOne({email: email,password: password ,isDeleted: false});
     if (!getUsersData) return res.status(401).send({ status: false, message: "Enter a valid Email or Password" });
 
     let token = jwt.sign(

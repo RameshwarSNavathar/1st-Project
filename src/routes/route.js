@@ -5,6 +5,7 @@ const userController = require("../controllers/userController");
 const reviewController = require("../controllers/reviewController");
 const {authenticate,authorisation} = require("../middlewares/auth");
 
+
 /***********************************user register *****************************/
 router.post("/register", userController.createUser);
 
@@ -34,6 +35,10 @@ router.put("/books/:bookId/review/:reviewId",reviewController.updateReview)
 
 /************************************delete review  ***********************/
 router.delete("/books/:bookId/review/:reviewId",reviewController.deleteReview)
+
+
+/***********************************aws*********************************/
+router.post("/aws-file",bookController.bookCover);
 
 /*******************************path not found  ***********************/
 router.all("/*",function (req,res){

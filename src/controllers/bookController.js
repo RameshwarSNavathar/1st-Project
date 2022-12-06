@@ -1,13 +1,68 @@
 const bookModel = require("../models/bookModel");
 const reviewModel = require("../models/reviewModel");
 const userModel = require("../models/userModel");
+const aws= require("aws-sdk");
 const { isValidObjectId,isValidISBN,isValidString, isValidDate } = require("../validator/validator");
 
+/**
+ * Access key ID
+AKIAY3L35MCRZNIRGT6N
+
+Secret access key
+9f+YFBVcSjZWM6DG9R4TUN8k8TGe4X+lXmO4jPiU
+ */
 //-------------------------->>-createBook-<<---------------------------<<
+aws.config.update({
+  accessKeyId : "AKIAY3L35MCRZNIRGT6N",
+  secretAccessKey : "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",
+  region: "ap-south-1"
+})
+
+let uploadFile = async ( file) =>{
+  return new Promise(function(resolve, reject) {
+    // this function will upload file to aws and return the link
+    let s3= new aws.S3({apiVersion: '2006-03-01'}); // we will be using the s3 service of aws
+ 
+    var uploadParams= {
+        ACL: "public-read",
+        Bucket: "classroom-training-bucket",  //HERE
+        Key: "abc/" + file.originalname, //HERE 
+        Body: file.buffer
+    }
+    s3.upload( uploadParams, function (err, data ){
+        if(err) {
+            return reject({"error": err})
+        }
+        console.log(data)
+        console.log("file uploaded succesfully")
+        return resolve(data.Location)
+    })
+  })
+}
+
+const bookCover = async function(req, res){
+  try{
+      let files= req.files
+      if(files && files.length>0){
+          let uploadedFileURL= await uploadFile( files[0] )
+          res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
+      }
+      else{
+          res.status(400).send({ msg: "No file found" })
+      }
+      
+  }
+  catch(err){
+      res.status(500).send({msg: err})
+  }
+}
+  
 const createBook = async function (req, res) {
   try {
       let data = req.body
-      const { title, excerpt, userId, ISBN, category, subcategory,releasedAt } = data
+      let files = req.files
+      const {title, excerpt, userId, ISBN, category, subcategory,releasedAt } = data
+      
       //-------------->>-validation-<<----------------<<
       if(Object.keys(data).length==0) return res.status(400).send({status:false,message:"please provide the data in request"})
       //----------->>-title..
@@ -24,7 +79,7 @@ const createBook = async function (req, res) {
       if (!userId) return res.status(400).send({ status: false, message: "userId is mandatory in request body" })
       if(!isValidObjectId(userId)) return res.status(400).send({status:false,message:"please provide the valid userId"})
       /******************************check authorization ***********************************/
-      if (userId != req.tokenId) return res.status(400).send({ status: false, message: "unauthorised user!" });
+      if (userId != req.tokenId) return res.status(403).send({ status: false, message: "unauthorised user!" });
       
       let user=await userModel.findById(userId)
       if(!user) return res.status(404).send({ status: false, message: "user not found with this user id" })
@@ -46,10 +101,21 @@ const createBook = async function (req, res) {
       //------------>>-releasedAt..
       if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt is mandatory in request body" })
       if (!isValidDate(releasedAt)) return res.status(400).send({ status: false, message: "please provide the valid releasedAt" })
+      
 
+      if(!files && files.length>0){
+        res.status(400).send({ msg: "No file found" })
+      }
+      let uploadedFileURL= await uploadFile( files[0] )
+      if(uploadedFileURL){
+        data.bookCover = uploadedFileURL
+      }
+      else{
+        res.status(400).send({message : "url not created"})
+      }
       //------------->>-createBook..
       let createBook = await bookModel.create(data)
-      return res.status(201).send({ status: true,message:"book created successfully" ,data: createBook })
+      return res.status(201).json({ status: true,message:"book created successfully" ,data: createBook })
   } catch (err) {
       return res.status(500).send({ status: false, message: err.message })
   }
@@ -147,4 +213,4 @@ const deletebookbyId= async function(req, res){
     return res.status(500).send({status:false, message:error.message})
   }
 }
-module.exports = {getbooks,createBook,getBookById,updateBook,deletebookbyId}
+module.exports = {bookCover,getbooks,createBook,getBookById,updateBook,deletebookbyId}

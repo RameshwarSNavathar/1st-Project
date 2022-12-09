@@ -32,22 +32,22 @@ let uploadFile = async ( file) =>{
   })
 }
 
-const bookCover = async function(req, res){
-  try{
-      let files= req.files
-      if(files && files.length>0){
-          let uploadedFileURL= await uploadFile( files[0] )
-          res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
-      }
-      else{
-          res.status(400).send({ msg: "No file found" })
-      }
+// const bookCover = async function(req, res){
+//   try{
+//       let files= req.files
+//       if(files && files.length>0){
+//           let uploadedFileURL= await uploadFile( files[0] )
+//           res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
+//       }
+//       else{
+//           res.status(400).send({ msg: "No file found" })
+//       }
       
-  }
-  catch(err){
-      res.status(500).send({msg: err})
-  }
-}
+//   }
+//   catch(err){
+//       res.status(500).send({msg: err})
+//   }
+// }
   
 const createBook = async function (req, res) {
   try {
@@ -205,4 +205,4 @@ const deletebookbyId= async function(req, res){
     return res.status(500).send({status:false, message:error.message})
   }
 }
-module.exports = {bookCover,getbooks,createBook,getBookById,updateBook,deletebookbyId}
+module.exports = {getbooks,createBook,getBookById,updateBook,deletebookbyId}

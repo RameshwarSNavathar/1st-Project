@@ -36,6 +36,10 @@ router.put("/books/:bookId/review/:reviewId",reviewController.updateReview)
 /************************************delete review  ***********************/
 router.delete("/books/:bookId/review/:reviewId",reviewController.deleteReview)
 
+/***********************************upload file ************************/
+
+router.post("/aws-sdk",bookController.bookCover)
+
 /*******************************path not found  ***********************/
 router.all("/*",function (req,res){
     return res.status(404).send({status:false,message:"path not found"})

@@ -32,27 +32,26 @@ let uploadFile = async ( file) =>{
   })
 }
 
-// const bookCover = async function(req, res){
-//   try{
-//       let files= req.files
-//       if(files && files.length>0){
-//           let uploadedFileURL= await uploadFile( files[0] )
-//           res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
-//       }
-//       else{
-//           res.status(400).send({ msg: "No file found" })
-//       }
+const bookCover = async function(req, res){
+  try{
+      let files= req.files
+      if(files && files.length>0){
+          let uploadedFileURL= await uploadFile( files[0] )
+          res.status(201).send({status : true ,messge: "file uploaded succesfully", data: uploadedFileURL})
+      }
+      else{
+          res.status(400).send({ status : false ,messge: "No file found" })
+      }
       
-//   }
-//   catch(err){
-//       res.status(500).send({msg: err})
-//   }
-// }
+  }
+  catch(err){
+      res.status(500).send({msg: err})
+  }
+}
   
 const createBook = async function (req, res) {
   try {
       let data = req.body
-      let files = req.files
       const {title, excerpt, userId, ISBN, category, subcategory,releasedAt } = data
       
       //-------------->>-validation-<<----------------<<
@@ -93,18 +92,7 @@ const createBook = async function (req, res) {
       //------------>>-releasedAt..
       if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt is mandatory in request body" })
       if (!isValidDate(releasedAt)) return res.status(400).send({ status: false, message: "please provide the valid releasedAt" })
-      
-
-      if(!files && files.length>0){
-        res.status(400).send({ msg: "No file found" })
-      }
-      let uploadedFileURL= await uploadFile( files[0] )
-      if(uploadedFileURL){
-        data.bookCover = uploadedFileURL
-      }
-      else{
-        res.status(400).send({message : "url not created"})
-      }
+     
       //------------->>-createBook..
       let createBook = await bookModel.create(data)
       return res.status(201).json({ status: true,message:"book created successfully" ,data: createBook })
@@ -205,4 +193,4 @@ const deletebookbyId= async function(req, res){
     return res.status(500).send({status:false, message:error.message})
   }
 }
-module.exports = {getbooks,createBook,getBookById,updateBook,deletebookbyId}
+module.exports = {getbooks,bookCover,createBook,getBookById,updateBook,deletebookbyId}

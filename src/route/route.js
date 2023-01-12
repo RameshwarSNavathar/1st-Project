@@ -6,11 +6,12 @@ const userCon=require("../controller/userController")
 const {authentication,Authrisation} =require("../meddlewar/reuseble")
 
 route.post("/register",userCon.RegisterUser)
-route.post("/Login",userCon.loginUser)
-route.post("/creteAadhar",authentication,adharCon.createAdhar)
-route.get("/seeAdhar",authentication,adharCon.getAadhar)
+route.post("/Login",userCon.loginUser)  
+route.delete("/LogOut-User",userCon.logoutUser)
+route.post("/creteAadhar/:docId",authentication,Authrisation,adharCon.createAdhar)  
+route.get("/seeAdhar/:docId",authentication,Authrisation,adharCon.getAadhar)
 route.put("/updateAdhar/:docId",authentication,Authrisation,adharCon.updateAdhar)
-route.delete("/Logout/:UId",authentication,Authrisation,adharCon.deletedAdhar)
+route.delete("/deletAadhar/:docId",authentication,Authrisation,adharCon.deletedAdhar)
 
 
 route.all("/*",function(req,res){

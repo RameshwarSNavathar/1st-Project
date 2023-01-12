@@ -8,7 +8,6 @@ const emailregex =/^\S+@\S+\.\S+$/
 
 const RegisterUser = async function (req, res) {
   try{
-
   let data = req.body;
   let {Email,Password,ConfirmPassword,firstName,lastName}=data
 
@@ -22,7 +21,6 @@ const RegisterUser = async function (req, res) {
   const element = isMandatory[i];
   if(!body.includes(element)) {return res.status(400).send({status:false,message:`${element} is a mandatory`})}
 }
-
   if(!emailregex.test(Email)) return res.status(400).send({status:false,Msg:"Please provide a valied format email address"})
   if(!(Password==ConfirmPassword)) return res.status(400).send("please check Confirm the password")
 
@@ -32,6 +30,9 @@ const RegisterUser = async function (req, res) {
   req.body.ConfirmPassword= hashpass 
   let unique=await userModel.findOne({Email:Email,firstName:firstName,lastName:lastName})
   if(unique) return res.status(400).send({massge:"This user allready registred!"})
+
+  let uni=await userModel.findOne({Email:Email})
+  if(uni) return res.status(400).send({massge:"Email is allready registred!"})
 
   let save = await userModel.create(data)       
   return res.status(201).send({Result:true,massage:"register sucssesfully",data:save});
@@ -63,26 +64,29 @@ try{
     
     let token=jwt.sign({userId:match._id},"my Aadhar Project")
     return res.status(201).send({Msg:"Successfully Login" ,token:token})
-    
     }      
     
 catch(Error){       
      return res.status(500).send(Error)
   }}  
+
+
 //                     o============o  Log-OutUser  o============o
 
 const logoutUser=async function(req,res){
-try {
-
-    let token =req.headers.auth 
-    let destroy= await userModel.deleteOne(token._id)
-    return res.status(200).send({status:true,msg:"Sucessfully Logout !"})
-    } 
-catch (error) {
-    return res.status(500).send({status:true,msg:error.message})
-    }}
-
-
+  try {
+    let token =req.headers.token
+    console.log(token)
+     let deley=await userModel.deleteOne(token._id)
+      console.log(deley)
+      return res.status(200).send({status:true,msg:"Sucessfully Logout !"})
+      next()
+      } 
+  catch (error) {
+      return res.status(500).send({status:true,msg:error.message})
+      }}
+  
+  
 //                                * exports *
 
 module.exports={loginUser,RegisterUser,logoutUser}

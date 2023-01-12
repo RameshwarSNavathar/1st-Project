@@ -67,7 +67,7 @@ try{
     }      
     
 catch(Error){       
-     return res.status(500).send(Error)
+    return res.status(500).send(Error)
   }}  
 
 
@@ -76,12 +76,10 @@ catch(Error){
 const logoutUser=async function(req,res){
   try {
     let token =req.headers.token
-    console.log(token)
-     let deley=await userModel.deleteOne(token._id)
-      console.log(deley)
-      return res.status(200).send({status:true,msg:"Sucessfully Logout !"})
-      next()
-      } 
+    let deley=await userModel.deleteOne(token._id)
+    return res.status(200).send({status:true,msg:"Sucessfully Logout !"})
+    next()
+    } 
   catch (error) {
       return res.status(500).send({status:true,msg:error.message})
       }}

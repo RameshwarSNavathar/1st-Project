@@ -1,5 +1,9 @@
-# project-booksManagementGroup29
-User Model
+
+# This is my Secound project  -booksManagement-
+
+# Project requirement
+
+# User Model
 { 
   title: {string, mandatory, enum[Mr, Mrs, Miss]},
   name: {string, mandatory},
@@ -15,7 +19,7 @@ User Model
   updatedAt: {timestamp}
 }
 
-Book Management
+# Book Management
 
 {
 title: {string, mandatory, enum[Mr, Mrs, Miss]},
@@ -32,7 +36,7 @@ createdAt: {timestamp},
 updatedAt: {timestamp}
 }
 
-Books Model
+# Books Model
 {
 title: {string, mandatory, unique},
 excerpt: {string, mandatory},
@@ -47,7 +51,7 @@ releasedAt: {Date, mandatory, format("YYYY-MM-DD")},
 createdAt: {timestamp},
 updatedAt: {timestamp},
 }
-Review Model (Books review)
+# Review Model (Books review)
 {
 bookId: {ObjectId, mandatory, refs to book model},
 reviewedBy: {string, mandatory, default 'Guest', value: reviewer's name},
@@ -56,7 +60,7 @@ rating: {number, min 1, max 5, mandatory},
 review: {string, optional}
 isDeleted: {boolean, default: false},
 }
-User APIs
+# User APIs
 
 POST /register
 Create a user - atleast 5 users
@@ -70,7 +74,7 @@ On a successful login attempt return a JWT token contatining the userId, exp, ia
 If the credentials are incorrect return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
 
 
-Books API
+# Books API
 
 POST /books
 
@@ -114,7 +118,8 @@ Also make sure in the response you return the updated book document.
 DELETE /books/:bookId
 Check if the bookId exists and is not deleted. If it does, mark it deleted and return an HTTP status 200 with a response body with status and message.
 If the book document doesn't exist then return an HTTP status of 404 with a body like this
-Review APIs
+
+# Review APIs
 
 
 POST /books/:bookId/review
@@ -138,171 +143,15 @@ Delete the related reivew.
 Update the books document - decrease review count by one
 
 
-Authentication
+# Authentication
 Make sure all the book routes are protected.
 
 
-Authorisation
+# Authorisation
 Make sure that only the owner of the books is able to create, edit or delete the book.
 In case of unauthorized access return an appropirate error message.
-Testing
-To test these apis create a new collection in Postman named Project 4 Books Management
+# Testing
+To test these apis create a new collection in Postman named Project-2 Books Management
 Each api should have a new request in this collection
-Each request in the collection should be rightly named. Eg Create user, Create book, Get books etc
-Each member of each team should have their tests in running state
-Refer below sample A Postman collection and request sample
-
-Response
-Successful Response structure
-{
-status: true,
-message: 'Success',
-data: {
-
-}
-}
-Error Response structure
-{
-status: false,
-message: ""
-}
-Collections
-users
-{
-\_id: ObjectId("88abc190ef0288abc190ef02"),
-title: "Mr",
-name: "John Doe",
-phone: 9897969594,
-email: "johndoe@mailinator.com",
-password: "abcd1234567",
-address: {
-street: "110, Ridhi Sidhi Tower",
-city: "Jaipur",
-pincode: "400001"
-},
-"createdAt": "2021-09-17T04:25:07.803Z",
-"updatedAt": "2021-09-17T04:25:07.803Z",
-}
-books
-{
-"\_id": ObjectId("88abc190ef0288abc190ef55"),
-"title": "How to win friends and influence people",
-"excerpt": "book body",
-"userId": ObjectId("88abc190ef0288abc190ef02"),
-"ISBN": "978-0008391331",
-"category": "Book",
-"subcategory": "Non fiction",
-"isDeleted": false,
-"reviews": 0,
-"releasedAt": "2021-09-17"
-"createdAt": "2021-09-17T04:25:07.803Z",
-"updatedAt": "2021-09-17T04:25:07.803Z",
-}
-reviews
-{
-"\_id": ObjectId("88abc190ef0288abc190ef88"),
-bookId: ObjectId("88abc190ef0288abc190ef55"),
-reviewedBy: "Jane Doe",
-reviewedAt: "2021-09-17T04:25:07.803Z",
-rating: 4,
-review: "An exciting nerving thriller. A gripping tale. A must read book."
-}
-Response examples
-Get books response
-{
-status: true,
-message: 'Books list',
-data: [
-{
-"_id": ObjectId("88abc190ef0288abc190ef55"),
-"title": "How to win friends and influence people",
-"excerpt": "book body",
-"userId": ObjectId("88abc190ef0288abc190ef02")
-"category": "Book",
-"reviews": 0,
-"releasedAt": "2021-09-17T04:25:07.803Z"
-},
-{
-"_id": ObjectId("88abc190ef0288abc190ef56"),
-"title": "How to win friends and influence people",
-"excerpt": "book body",
-"userId": ObjectId("88abc190ef0288abc190ef02")
-"category": "Book",
-"reviews": 0,
-"releasedAt": "2021-09-17T04:25:07.803Z"
-}
-]
-}
-Book details response
-{
-status: true,
-message: 'Books list',
-data: {
-"\_id": ObjectId("88abc190ef0288abc190ef55"),
-"title": "How to win friends and influence people",
-"excerpt": "book body",
-"userId": ObjectId("88abc190ef0288abc190ef02")
-"category": "Book",
-"subcategory": "Non fiction",
-"isDeleted": false,
-"reviews": 4,
-"releasedAt": "2021-09-17T04:25:07.803Z"
-"createdAt": "2021-09-17T04:25:07.803Z",
-"updatedAt": "2021-09-17T04:25:07.803Z",
-"reviewsData": [
-{
-"_id": ObjectId("88abc190ef0288abc190ef88"),
-bookId: ObjectId("88abc190ef0288abc190ef55"),
-reviewedBy: "Jane Doe",
-reviewedAt: "2021-09-17T04:25:07.803Z",
-rating: 4,
-review: "An exciting nerving thriller. A gripping tale. A must read book."
-},
-{
-"_id": ObjectId("88abc190ef0288abc190ef89"),
-bookId: ObjectId("88abc190ef0288abc190ef55"),
-reviewedBy: "Jane Doe",
-reviewedAt: "2021-09-17T04:25:07.803Z",
-rating: 4,
-review: "An exciting nerving thriller. A gripping tale. A must read book."
-},
-{
-"_id": ObjectId("88abc190ef0288abc190ef90"),
-bookId: ObjectId("88abc190ef0288abc190ef55"),
-reviewedBy: "Jane Doe",
-reviewedAt: "2021-09-17T04:25:07.803Z",
-rating: 4,
-review: "An exciting nerving thriller. A gripping tale. A must read book."
-},
-{
-"_id": ObjectId("88abc190ef0288abc190ef91"),
-bookId: ObjectId("88abc190ef0288abc190ef55"),
-reviewedBy: "Jane Doe",
-reviewedAt: "2021-09-17T04:25:07.803Z",
-rating: 4,
-review: "An exciting nerving thriller. A gripping tale. A must read book."
-},
-]
-}
-}
-Book details response no reviews
-{
-status: true,
-message: 'Books list',
-data: {
-"\_id": ObjectId("88abc190ef0288abc190ef55"),
-"title": "How to win friends and influence people",
-"excerpt": "book body",
-"userId": ObjectId("88abc190ef0288abc190ef02")
-"category": "Book",
-"subcategory": "Non fiction",
-"isDeleted": false,
-"reviews": 0,
-"releasedAt": "2021-09-17"
-"createdAt": "2021-09-17T04:25:07.803Z",
-"updatedAt": "2021-09-17T04:25:07.803Z",
-"reviewsData": []
-}
-}
-
+Each request in the collection should be rightly named. Eg Create user, Create book, Get books etc.
 

@@ -1,5 +1,5 @@
 {
-  "name": "project-booksmanagementgroup29",
+  "name": "project-booksmanagement",
   "version": "1.0.0",
   "description": "Book Mgmt Project",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/ChavanPriya97/project-booksManagementGroup29.git"
   },
-  "author": " (Santoshini , Shubham , Priyanka, Bhagwan)",
+  "author": " (Rameshwar Navathar)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ChavanPriya97/project-booksManagementGroup29/issues"
